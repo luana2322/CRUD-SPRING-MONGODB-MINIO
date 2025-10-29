@@ -38,19 +38,28 @@ class ApiService {
       headers: {'Content-Type': 'application/json'},
       body: json.encode(user.toJson()),
     );
-    if (res.statusCode == 200) {
+    if (res.statusCode == 200 || res.statusCode == 201) {
       return UserModel.fromJson(json.decode(res.body));
     } else {
       throw Exception('Create failed: ${res.statusCode} ${res.body}');
     }
   }
 
+  /// 🧩 Cập nhật người dùng
   Future<UserModel> updateUser(String username, UserModel user) async {
+    final bodyData = json.encode(user.toJson(includePassword: false));
+    print('Updating user: $username');
+    print('Body: $bodyData');
+
     final res = await http.put(
       Uri.parse('$base/users/$username'),
       headers: {'Content-Type': 'application/json'},
-      body: json.encode(user.toJson(includePassword: false)),
+      body: bodyData,
     );
+
+    print('Response code: ${res.statusCode}');
+    print('Response body: ${res.body}');
+
     if (res.statusCode == 200) {
       return UserModel.fromJson(json.decode(res.body));
     } else {
@@ -60,13 +69,12 @@ class ApiService {
 
   Future<void> deleteUser(String username) async {
     final res = await http.delete(Uri.parse('$base/users/$username'));
-    if (res.statusCode != 204 && res.statusCode != 200) {
+    if (res.statusCode != 200 && res.statusCode != 204) {
       throw Exception('Delete failed: ${res.statusCode}');
     }
   }
 
-  /// Upload image: supports mobile (File) and web (bytes).
-  /// Returns the URL string from backend.
+  /// Upload ảnh user (qua MinIO)
   Future<String> uploadUserImage({
     required String username,
     File? file,
@@ -74,7 +82,6 @@ class ApiService {
     String? filename,
   }) async {
     final uri = Uri.parse('$base/users/$username/image');
-
     final request = http.MultipartRequest('POST', uri);
 
     if (file != null) {
@@ -100,19 +107,20 @@ class ApiService {
         ),
       );
     } else {
-      throw Exception('No file/bytes provided for upload');
+      throw Exception('No file or bytes provided');
     }
 
     final streamed = await request.send();
     final resp = await http.Response.fromStream(streamed);
+
     if (resp.statusCode == 200) {
-      // assuming backend returns plain URL string or JSON with URL
-      // try parse JSON first
       try {
         final parsed = json.decode(resp.body);
-        if (parsed is Map && parsed['url'] != null) return parsed['url'];
+        if (parsed is Map && parsed['url'] != null) {
+          return parsed['url'];
+        }
       } catch (_) {}
-      return resp.body; // fallback: plain text url
+      return resp.body;
     } else {
       throw Exception('Upload failed: ${resp.statusCode} ${resp.body}');
     }
