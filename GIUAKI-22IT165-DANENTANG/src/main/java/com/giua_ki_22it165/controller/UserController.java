@@ -3,15 +3,17 @@ package com.giua_ki_22it165.controller;
 import com.giua_ki_22it165.model.Users;
 import com.giua_ki_22it165.service.serviceImpl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class UserController {
 
     @Autowired
@@ -46,6 +48,7 @@ public class UserController {
 
     @PutMapping("/users/{username}")
     public ResponseEntity<Users> updateUser(@PathVariable String username, @RequestBody Users user) {
+
         return userService.updateUser(username, user)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -79,5 +82,21 @@ public class UserController {
             return ResponseEntity.status(500).body("Upload failed: " + e.getMessage());
         }
     }
+
+@PostMapping("/login")
+public ResponseEntity<?> login(@RequestBody Users loginRequest) {
+    if (loginRequest.getUsername() == null || loginRequest.getPassword() == null) {
+        return ResponseEntity.badRequest().body("Username or password missing");
+    }
+
+    Optional<Users> userOpt = userService.login(loginRequest.getUsername(), loginRequest.getPassword());
+
+    if (userOpt.isPresent()) {
+        Users user = userOpt.get();
+        return ResponseEntity.ok(user); // Có thể ẩn trường password trước khi trả về
+    }
+
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid username or password");
+}
 
 }

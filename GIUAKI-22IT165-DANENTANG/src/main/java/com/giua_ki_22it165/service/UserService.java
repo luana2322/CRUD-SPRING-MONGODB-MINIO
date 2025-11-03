@@ -13,4 +13,5 @@ public Users createUser(Users user);
 public Optional<Users> updateUser(String username, Users updatedUser);
 public void deleteUser(String username);
 public String uploadUserImage(String username, MultipartFile file) throws Exception;
+public Optional<Users> login(String username, String password);
 }

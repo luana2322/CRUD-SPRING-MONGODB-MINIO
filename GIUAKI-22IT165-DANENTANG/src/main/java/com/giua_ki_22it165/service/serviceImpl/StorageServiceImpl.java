@@ -46,7 +46,6 @@ public class StorageServiceImpl implements StorageService {
         }
 
 
-// Tạo presigned URL (public trong thời gian ngắn) hoặc nếu bucket public thì có thể build URL trực tiếp
         String url = minioClient.getPresignedObjectUrl(
                 GetPresignedObjectUrlArgs.builder()
                         .method(Method.GET)
