@@ -97,6 +97,12 @@ GIUAKI-22IT165-DANENTANG/
 ├── src/main/
 │   ├── java/com/giua_ki_22it165/
 │   │   ├── GiuaKi22it165Application.java     # Main Spring Boot class
+│   │   ├── config/
+│   │   │   ├── MinioConfig.java              # MinIO configuration
+│   │   │   ├── WebConfig.java                # Web CORS configuration
+│   │   │   ├── PasswordUtil.java             # Password encryption utility
+│   │   │   ├── AESUtil.java                  # AES encryption utility
+│   │   │   └── DataSeeder.java               # Initial data loader
 │   │   ├── controller/
 │   │   │   └── UserController.java           # REST API endpoints
 │   │   ├── model/
@@ -104,9 +110,11 @@ GIUAKI-22IT165-DANENTANG/
 │   │   ├── repository/
 │   │   │   └── UserRepository.java           # MongoDB repository
 │   │   ├── service/
+│   │   │   ├── UserService.java              # User service interface
+│   │   │   ├── StorageService.java           # Storage service interface
 │   │   │   └── serviceImpl/
-│   │   │       ├── UserServiceImpl.java       # User business logic
-│   │   │       └── StorageServiceImpl.java    # MinIO storage logic
+│   │   │       ├── UserServiceImpl.java       # User business logic implementation
+│   │   │       └── StorageServiceImpl.java    # MinIO storage logic implementation
 │   └── resources/
 │       └── application.properties             # Spring configuration
 ├── pom.xml                                    # Maven dependencies
