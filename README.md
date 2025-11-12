@@ -319,10 +319,10 @@ services:
 
 ```bash
 # Build backend image
-docker build -t giua-ki-backend ./GIUAKI-22IT165-DANENTANG
+docker build -t spring-backend ./GIUAKI-22IT165-DANENTANG
 
 # Build frontend image
-docker build -t giua-ki-frontend ./flutter_crud
+docker build -t flutter-frontend ./flutter_crud
 
 # Start all services
 docker-compose up -d
@@ -407,14 +407,14 @@ Create a `.env` file with the following variables:
 ```env
 # MongoDB
 MONGO_PORT=27017
-MONGO_INITDB_ROOT_USERNAME=admin
-MONGO_INITDB_ROOT_PASSWORD=password123
+MONGO_INITDB_ROOT_USERNAME=your-username
+MONGO_INITDB_ROOT_PASSWORD=your-password
 
 # MinIO
 MINIO_PORT=9000
 MINIO_CONSOLE_PORT=9001
-MINIO_ROOT_USER=minioadmin
-MINIO_ROOT_PASSWORD=minioadmin123
+MINIO_ROOT_USER=your-username
+MINIO_ROOT_PASSWORD=your-password
 ```
 
 ---
