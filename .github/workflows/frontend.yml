@@ -21,12 +21,17 @@ jobs:
 
     - name: Flutter pub get
       run: flutter pub get
+      working-directory: flutter_crud
 
     - name: Flutter analyze
       run: flutter analyze
+      working-directory: flutter_crud
 
     - name: Flutter test
       run: flutter test
+      working-directory: flutter_crud
 
     - name: Flutter build (apk)
       run: flutter build apk --debug
+      working-directory: flutter_crud
+
