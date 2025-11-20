@@ -31,6 +31,8 @@ jobs:
 
     - name: Build with Maven
       run: mvn clean install -DskipTests
+      working-directory: GIUAKI-22IT165-DANENTANG
 
     - name: Run tests
       run: mvn test
+      working-directory: GIUAKI-22IT165-DANENTANG
