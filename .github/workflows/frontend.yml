@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
@@ -11,31 +14,44 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      # Checkout code
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Set up Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.16.0'
+      # Setup Flutter 3.16.x (Dart 3.10+)
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.16.0'
 
-    - name: Flutter pub get
-      run: flutter pub get
-      working-directory: flutter_crud
+      # Confirm Flutter & Dart version
+      - name: Check Flutter & Dart version
+        run: |
+          flutter --version
+          dart --version
 
-    - name: Flutter analyze
-      run: flutter analyze
-      working-directory: flutter_crud
+      # Get dependencies
+      - name: Flutter pub get
+        run: flutter pub get
+        working-directory: flutter_crud
 
-    - name: Flutter test
-      run: flutter test
-      working-directory: flutter_crud
+      # Analyze code
+      - name: Flutter analyze
+        run: flutter analyze
+        working-directory: flutter_crud
 
-    - name: Flutter build (apk)
-      run: flutter build apk --debug
-      working-directory: flutter_crud
+      # Run tests
+      - name: Flutter test
+        run: flutter test
+        working-directory: flutter_crud
 
-    - name: Debug environment
-      run: |
-        uname -a
-        curl https://storage.googleapis.com/flutter_infra_release/releases/releases_linux.json
+      # Build APK (debug)
+      - name: Flutter build APK
+        run: flutter build apk --debug
+        working-directory: flutter_crud
+
+      # Optional: debug environment
+      - name: Debug environment
+        run: |
+          uname -a
+          echo $GITHUB_ENV
